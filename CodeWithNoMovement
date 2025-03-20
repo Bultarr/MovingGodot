@@ -1,0 +1,63 @@
+extends Node2D
+
+@onready var icon = $Icon
+@onready var godot_happy_face = $GodotHappyFace
+@onready var godot_mad_face = $GodotMadFace
+@onready var godot_happy_faceV2 = $GodotHappyFaceV2
+@onready var godot_happy_faceV3 = $GodotHappyFaceV3
+
+var window_pos: Vector2
+var mouse_pos: Vector2
+var absolute_mouse_pos: Vector2
+
+# Define the box areas for sprite changes
+var box1_min = Vector2(2305, 1010)
+var box1_max = Vector2(2410, 742)
+var box2_min = Vector2(2426, 981)
+var box2_max = Vector2(2521, 890)
+var box3_min = Vector2(2414, 545)
+var box3_max = Vector2(2525, 450)
+
+func _ready():
+	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_TRANSPARENT, true)  # Hides window
+	get_viewport().transparent_bg = true
+
+func _process(delta):
+	# Get the window position relative to the desktop
+	window_pos = Vector2(get_parent().position)  # Get position from parent (the window node)
+	mouse_pos = get_viewport().get_mouse_position()  # Mouse position relative to window
+	absolute_mouse_pos = window_pos + mouse_pos  # Calculate absolute screen position
+
+	# Update the sprite visibility based on mouse position
+	_update_sprites()
+
+func _update_sprites():
+	# Check if the mouse is inside box2
+	if is_mouse_in_area(box2_min, box2_max):
+		icon.visible = false
+		godot_happy_face.visible = false
+		godot_mad_face.visible = true
+
+	# Check if the mouse is inside box1
+	elif is_mouse_in_area(box1_min, box1_max):
+		icon.visible = false
+		godot_happy_face.visible = false
+		godot_mad_face.visible = true
+	
+	# Check if the mouse is inside box3
+	elif is_mouse_in_area(box3_min, box3_max):
+		icon.visible = false
+		godot_happy_face.visible = false
+		godot_mad_face.visible = false
+		godot_happy_faceV2.visible = true
+
+	else:
+		# Mouse is outside both boxes, show icon by default
+		icon.visible = true
+		godot_happy_face.visible = false
+		godot_mad_face.visible = false
+		godot_happy_faceV2.visible = false
+
+# Helper function to check if the mouse is within a box area
+func is_mouse_in_area(min: Vector2, max: Vector2) -> bool:
+	return absolute_mouse_pos.x >= min.x and absolute_mouse_pos.x <= max.x and absolute_mouse_pos.y <= min.y and absolute_mouse_pos.y >= max.y

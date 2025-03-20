@@ -1,0 +1,36 @@
+extends Node
+
+@onready var _MainWindow: Window = get_window()
+@onready var _SubWindow: Window = $Window
+@onready var window: Window = $Window
+@onready var moving_godot: Node2D = $MovingGodot
+@export var window_scene: PackedScene  # Assign "Window" scene in the Inspector
+var new_position: Vector2i  # Variable to store the new position
+
+func _ready():
+	# Set the first Window's position to MovingGodot's position
+	window.position = moving_godot.position
+
+func _process(delta: float) -> void:
+	# Always update new_position from MovingGodot
+	new_position = moving_godot.new_position
+	
+func _input(event):
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		spawn_window()
+
+func spawn_window():
+	# Instantiate a new Window scene
+	var new_window = window_scene.instantiate()
+	
+	
+	# Set the new window's position based on the updated position
+	new_window.position = new_position
+	
+	# Add the new window instance as a child of Main
+	add_child(new_window)
+
+	
+#func _process(delta: float) -> void:
+	#print(window.position)
+	#(2357, 876)
